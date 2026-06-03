@@ -222,8 +222,8 @@ Other skills and subagents are soft dependencies:
 
 - If `$pixelmator-pxd-editor`, `$ui-ux-pro-max`, or `$imagegen` is available locally, use it for its relevant step.
 - If a soft skill is unavailable, skip that skill-specific pass or use the closest safe local substitute, then report at the end that the workflow did not follow the most standard path and name the substitute used.
-- Two workflow steps require subagent delegation to keep the main conversation context lean: promo point discovery and localized headline writing. Delegate both to subagents using whatever mechanism the current environment provides. Do not perform either task inline in the main conversation.
-- If no subagent mechanism exists at all in the current environment, stop and report that the workflow is blocked.
+- Two workflow steps prefer subagent delegation: promo point discovery and localized headline writing. Delegate both to subagents using whatever mechanism the current environment provides.
+- If no subagent mechanism exists, perform both steps inline within the current context and note this in the final report. This is acceptable when this skill is already running as a subagent, because the main conversation context is already protected.
 
 Soft dependency resolution:
 
@@ -245,12 +245,12 @@ Soft dependency resolution:
 
 ## Subagent Delegation
 
-Two steps in this workflow must be delegated to subagents to keep the main conversation context lean. Spawn a capable subagent for each step using whatever mechanism the current environment provides. Do not perform either task inline in the main conversation.
+Two steps in this workflow prefer subagent delegation: promo point discovery and headline writing. Spawn a capable subagent for each step using whatever mechanism the current environment provides.
 
 - In Claude Code: use the Agent tool, describing the required capability in the prompt.
 - In Codex or similar platforms: use any named agent that matches, or spawn one by role description.
 - Any agent capable of doing the job is acceptable. There is no required agent name.
-- If the environment provides no subagent mechanism at all, stop and report that the workflow is blocked.
+- If no subagent mechanism is available, perform both steps inline within the current context. Note the fallback in the final report. This is acceptable when this skill is already running as a subagent spawned by `$asc-launch-workflow`, because the main conversation context is already protected at the coordinator level.
 
 **Step A — Promo point discovery**
 
