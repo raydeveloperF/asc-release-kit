@@ -254,6 +254,8 @@ Expect back:
 - paths to generated `.pxd` and `.png` files;
 - dependency check result, screenshot acceptance result, export QA result.
 
+**After receiving the subagent's response, the coordinator must verify that `.pxd` file paths are present before proceeding.** If the response contains no `.pxd` paths, do not advance to Step 6. Instead, reject the result and ask the subagent to either complete the PXD processing step or report the exact reason it could not be done. Only accept a response with no `.pxd` files if the subagent explicitly reports a hard blocker that prevented Pixelmator Pro from running — in that case, surface the blocker to the user and ask whether to continue without the PXD step.
+
 Do not let metadata copy automatically become screenshot headlines. Promotional headlines are owned by `$asc-screenshots` and must be grounded in actual screenshots.
 
 ### 6. Review Bundle
