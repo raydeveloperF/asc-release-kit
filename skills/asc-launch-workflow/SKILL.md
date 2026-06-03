@@ -243,8 +243,7 @@ Pass to the subagent:
 - target locales and folder naming style;
 - PXD template path;
 - output folder: `<output-root>/screenshots/`;
-- screenshot UI test details (target, scheme, test plan if available);
-- metadata/keyword context: path to `asc-metadata.md` and `asc-keywords.md` to avoid contradictory wording in headlines.
+- screenshot UI test details (target, scheme, test plan if available).
 
 Note: `$asc-screenshots` internally dispatches its own subagents for promo point discovery and headline writing. The coordinator does not manage those inner subagents; it only waits for the final output.
 
@@ -285,6 +284,8 @@ Check:
 - claims are grounded in project evidence;
 - locale names are consistent across metadata, keywords, screenshots, and ASC targets;
 - no live ASC mutation has happened yet.
+
+Write the completed review bundle to `<output-root>/asc-launch-review.md`.
 
 Ask the user to review if `Stop after each phase` is enabled or if the bundle contains assumptions that affect live App Store content.
 
