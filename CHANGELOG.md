@@ -10,6 +10,11 @@ This project uses [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 ### Added
 
 - `docs/asc-api-setup.md`: step-by-step guide for generating an App Store Connect API key, storing the `.p8` private key, creating `~/.asc_secrets`, and verifying the setup.
+- `asc-screenshots`: new `Writing UI Tests When Missing` section — when no Xcode UI test target exists, the skill inspects the project, generates `ScreenshotTests.swift` and an `.xctestplan` for all target locales, shows the code to the user for approval, writes the files, and runs the tests. Xcode UI Tests remain the only accepted screenshot source.
+
+### Changed
+
+- `asc-screenshots`: Xcode UI Tests are no longer a hard blocker. Missing tests trigger code generation instead of stopping the workflow. The other four hard dependencies (Pixelmator Pro, AppleScript, PXD template, localization list) remain strict hard stops.
 
 ### Changed
 

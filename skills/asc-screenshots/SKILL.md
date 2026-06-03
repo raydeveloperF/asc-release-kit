@@ -15,9 +15,11 @@ Before starting, verify all five hard dependencies:
 - Pixelmator Pro AppleScript automation is available.
 - A local `.pxd` file that contains the iPhone mockup/template.
 - The target localization language list.
-- Xcode UI Tests are available for the target iOS project screenshot workflow.
+- Xcode UI Tests are available for the target iOS project screenshot workflow, **or the project is inspectable so that UI test code can be generated**.
 
-If any hard dependency is missing, stop before product analysis, screenshots, PXD creation, or fallback asset work. Tell the user the workflow requires all five hard dependencies and list exactly which ones are missing. Do not substitute manual screenshots, a recreated iPhone frame, non-PXD templates, or non-AppleScript PXD edits for missing hard dependencies.
+If Pixelmator Pro, its AppleScript support, the PXD template, or the localization list are missing, stop immediately. Tell the user which of those four items is missing. Do not substitute manual screenshots, a recreated iPhone frame, non-PXD templates, or non-AppleScript PXD edits for any of these four missing items.
+
+Xcode UI Tests follow a different rule: if they are missing, do not stop. Instead follow the `Writing UI Tests When Missing` section to inspect the project, generate a working screenshot test target, write it into the project, confirm it with the user, and run it. Only stop if the project cannot be read or understood well enough to write meaningful test navigation.
 
 Hard dependency verification checklist:
 
@@ -25,7 +27,194 @@ Hard dependency verification checklist:
 - Pixelmator Pro AppleScript: run a minimal read-only AppleScript check, such as reading `name` or `build number`, without opening or changing user documents.
 - PXD template: confirm the user-provided path exists, has a `.pxd` extension, and is a local file intended to contain the iPhone mockup.
 - Localization list: confirm the list is non-empty, normalize each language to a stable output folder name, and ask before inventing missing locales.
-- Xcode UI Tests: confirm the project has a runnable UI test target, scheme, or test plan for the screenshot workflow, and that the tests can produce screenshots either as files in the output tree or as test attachments that can be extracted.
+- Xcode UI Tests: check whether a UI test target already exists in the project. If it exists and has screenshot-capable tests, use them directly. If it does not exist or has no screenshot tests, proceed to `Writing UI Tests When Missing`.
+
+## Writing UI Tests When Missing
+
+When no Xcode UI test target exists for the project, or the existing UI test target has no screenshot-capturing tests, generate and add them before running the screenshot workflow. Follow this process exactly.
+
+### 1. Inspect the project
+
+Read the project read-only to understand the app structure before writing any test code:
+
+- Identify the main app target name and bundle ID from the `.xcodeproj` or `Package.swift`.
+- Find the app entry point: `@main`, `App` conformance, `SceneDelegate`, or `AppDelegate`.
+- Find the key screens to promote: main views, tab bar structure, navigation hierarchy, and any feature-specific screens confirmed by the promo plan.
+- Note any existing launch arguments or `ProcessInfo.processInfo.environment` checks the app already uses for testing or preview modes. Use the same pattern to inject screenshot state.
+- Check for existing sample data or test fixtures that produce realistic content. Prefer them over empty-state screenshots.
+
+### 2. Create a UI test target if one does not exist
+
+If the project has no UI test target at all, create one:
+
+1. Add a new target of type **UI Testing Bundle** in Xcode. Name it `<AppName>UITests` following the existing naming convention.
+2. Set the **Target to be Tested** to the main app target.
+3. Add the new target to the existing scheme under **Test → Test**.
+4. Create the test file at `<AppName>UITests/<AppName>ScreenshotTests.swift`.
+
+If the project already has a UI test target but no screenshot tests, add a new file `ScreenshotTests.swift` inside the existing target. Do not modify existing test files.
+
+### 3. Write the screenshot test file
+
+Generate a `ScreenshotTests.swift` file tailored to this app's navigation. Use this structure as the base pattern:
+
+```swift
+import XCTest
+
+final class ScreenshotTests: XCTestCase {
+
+    private var app: XCUIApplication!
+
+    override func setUpWithError() throws {
+        continueAfterFailure = false
+        app = XCUIApplication()
+        // Use a launch argument so the app can detect screenshot mode
+        // and load deterministic sample data if it supports this.
+        app.launchArguments += ["--screenshot-mode"]
+        app.launch()
+    }
+
+    // Add one test function per promo point.
+    // Name each test with a two-digit prefix so they sort by capture order.
+    func test01_MainScreen() throws {
+        // The app launches directly to the main screen.
+        // Wait for the UI to settle before capturing.
+        XCTAssertTrue(app.wait(for: .runningForeground, timeout: 5))
+        capture(name: "01-main-screen")
+    }
+
+    func test02_DetailView() throws {
+        // Navigate to the detail view.
+        app.buttons["Add Entry"].firstMatch.tap()
+        XCTAssertTrue(app.navigationBars.firstMatch.waitForExistence(timeout: 3))
+        capture(name: "02-detail-view")
+    }
+
+    // MARK: - Helper
+
+    private func capture(name: String) {
+        let screenshot = XCUIScreen.main.screenshot()
+
+        // Store as XCTAttachment so it is always preserved in the result bundle.
+        let attachment = XCTAttachment(screenshot: screenshot)
+        attachment.name = name
+        attachment.lifetime = .keepAlways
+        add(attachment)
+
+        // Also write directly to a folder so extraction is straightforward.
+        // Pass SCREENSHOT_OUTPUT_DIR as an environment variable when running tests
+        // if direct file output is preferred over xcresulttool extraction.
+        if let outputDir = ProcessInfo.processInfo.environment["SCREENSHOT_OUTPUT_DIR"] {
+            let dir = URL(fileURLWithPath: outputDir)
+            try? FileManager.default.createDirectory(at: dir,
+                                                     withIntermediateDirectories: true)
+            let file = dir.appendingPathComponent("\(name).png")
+            try? screenshot.pngRepresentation.write(to: file)
+        }
+    }
+}
+```
+
+Adapt the test body for each promo point identified by `@product-manager`. Replace the example navigation steps with real element queries derived from the inspected app. Use `waitForExistence(timeout:)` instead of `sleep` for all waits.
+
+Do not invent UI element labels. Derive them from the inspected source: `accessibilityIdentifier`, `accessibilityLabel`, button titles, navigation bar titles, or visible text strings from the app's localization files.
+
+### 4. Handle localization in tests
+
+To capture screenshots in multiple languages, use an Xcode Test Plan:
+
+1. Create `<AppName>Screenshots.xctestplan` at the project root.
+2. Add one configuration per locale. Example for two locales:
+
+```json
+{
+  "configurations": [
+    {
+      "id": "en-US-config",
+      "name": "en-US",
+      "options": {
+        "language": "en",
+        "region": "US"
+      }
+    },
+    {
+      "id": "zh-Hans-config",
+      "name": "zh-Hans",
+      "options": {
+        "language": "zh-Hans",
+        "region": "CN"
+      }
+    }
+  ],
+  "defaultOptions": {
+    "testTimeoutsEnabled": true,
+    "defaultTestExecutionTimeAllowance": 60
+  },
+  "testTargets": [
+    {
+      "target": {
+        "name": "<AppName>UITests",
+        "type": "target"
+      }
+    }
+  ],
+  "version": 1
+}
+```
+
+3. Add the test plan to the scheme under **Test → Test Plans**.
+
+If a test plan already exists in the project for other targets, add a new test plan rather than modifying the existing one.
+
+### 5. Show the generated code to the user before writing
+
+Before writing any file to the project, show the user:
+
+- The full `ScreenshotTests.swift` content.
+- The test plan JSON, if generated.
+- The target and scheme changes needed.
+
+Ask for confirmation. If the user requests changes to the navigation steps, update the generated code. Do not write to the project until the user approves.
+
+### 6. Run the tests and extract screenshots
+
+After the user approves and the files are written, run the tests using XcodeBuildMCP when available, or via `xcodebuild` directly:
+
+```bash
+# With a test plan for all locales at once:
+xcodebuild test \
+  -project <AppName>.xcodeproj \
+  -scheme <SchemeName> \
+  -testPlan <AppName>Screenshots \
+  -destination 'platform=iOS Simulator,name=iPhone 16 Pro' \
+  -resultBundlePath TestResults.xcresult
+
+# Extract screenshots from the result bundle:
+xcrun xcresulttool get --path TestResults.xcresult \
+  --format json > result.json
+```
+
+If `SCREENSHOT_OUTPUT_DIR` was set, screenshots are already in that folder; skip extraction.
+
+To extract attachments from an `.xcresult` bundle without writing a custom parser, use:
+
+```bash
+# List all attachments
+xcrun xcresulttool export --path TestResults.xcresult \
+  --output-path screenshots/ \
+  --type directory
+```
+
+Organize extracted screenshots into the per-language folder structure required by the rest of this workflow before continuing to screenshot acceptance.
+
+### 7. Note the generated tests in the output report
+
+At the end of the workflow, the output report must include:
+
+- Whether UI tests were pre-existing or generated by this skill.
+- The file path of any generated `ScreenshotTests.swift` and test plan.
+- The exact `xcodebuild` command used to run them.
+- Whether `--screenshot-mode` was supported by the app or was passed as an unused launch argument.
 
 ## Soft Dependencies
 
@@ -110,11 +299,12 @@ If a screenshot fails acceptance, recapture it before editing PXD files. If it c
    - Keep claims grounded in implemented product behavior.
 
 3. Capture localized screenshots.
-   - Use Xcode UI Tests for iOS screenshots.
-   - Use XcodeBuildMCP tooling when available to build, run, and capture through the UI test workflow; otherwise run the Xcode UI Tests through the available local Xcode tooling and report the substitute path at the end.
-   - For many localizations, consider an Xcode Test Plan for the language/region matrix.
-   - Generate deterministic UI states required by the promo points.
-   - Export or extract UI test screenshots into the language screenshot folders.
+   - Check whether a screenshot-capable UI test target already exists in the project.
+   - If it does not exist, follow `Writing UI Tests When Missing` in full before continuing: inspect the project, generate `ScreenshotTests.swift` and a test plan, show the code to the user, wait for approval, write the files, then proceed.
+   - If it already exists, verify it can produce the promo-point screenshots the plan requires. Add missing test functions if needed, following the same show-and-confirm rule before writing.
+   - Use XcodeBuildMCP tooling when available to build, run, and capture through the UI test workflow; otherwise run the tests via `xcodebuild` and report the substitute path at the end.
+   - Run tests with the generated test plan to cover all locales in one pass.
+   - Export or extract UI test screenshots from the result bundle into the language screenshot folders.
    - Apply the screenshot acceptance criteria before moving to PXD creation.
    - Save screenshots under one folder per language:
      - `App Store Promo Assets/en：英语/screenshots/`
