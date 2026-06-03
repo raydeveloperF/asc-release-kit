@@ -1,4 +1,4 @@
-# ASC Launch Kit
+# ASC Release Kit
 
 This repository is a Codex and Claude Code plugin containing Agent Skills for App Store Connect launch/update work.
 

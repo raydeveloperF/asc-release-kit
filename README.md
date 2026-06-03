@@ -1,6 +1,8 @@
-# ASC Launch Kit
+# ASC Release Kit
 
-ASC Launch Kit is a Codex and Claude Code plugin for preparing localized App Store Connect updates from real app projects.
+[![CI](https://github.com/raydeveloperf/asc-release-kit/actions/workflows/ci.yml/badge.svg)](https://github.com/raydeveloperf/asc-release-kit/actions/workflows/ci.yml)
+
+ASC Release Kit is a Codex and Claude Code plugin for preparing localized App Store Connect updates from real app projects.
 
 It bundles six Agent Skills:
 
@@ -15,7 +17,7 @@ It bundles six Agent Skills:
 
 ## What It Does
 
-ASC Launch Kit is designed for one coordinated App Store Connect publishing flow:
+ASC Release Kit is designed for one coordinated App Store Connect publishing flow:
 
 1. Validate that all required launch inputs are present before starting.
 2. Build one shared product brief from the local app project.
@@ -105,7 +107,7 @@ For a full workflow, provide:
 
 ## Security Model
 
-ASC Launch Kit is intentionally conservative around App Store Connect automation.
+ASC Release Kit is intentionally conservative around App Store Connect automation.
 
 - Do not paste ASC secrets, `.p8` contents, JWTs, or Authorization headers into chat.
 - Keep ASC credentials outside every project, normally in `~/.asc_secrets`.

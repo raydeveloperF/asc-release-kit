@@ -1,4 +1,4 @@
-# Contributing to ASC Launch Kit
+# Contributing to ASC Release Kit
 
 Thank you for taking the time to contribute. This document covers everything you need to get started.
 

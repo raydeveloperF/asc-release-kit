@@ -1,4 +1,4 @@
-# ASC Launch Kit
+# ASC Release Kit
 
 <!-- This file is read by Claude Code as its project-level instruction file.
      It intentionally delegates to AGENTS.md, which is the canonical
