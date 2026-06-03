@@ -7,6 +7,15 @@ This project uses [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
 
+### Added
+
+- `docs/asc-api-setup.md`: step-by-step guide for generating an App Store Connect API key, storing the `.p8` private key, creating `~/.asc_secrets`, and verifying the setup.
+
+### Changed
+
+- `asc-api` SKILL.md: `Local Credential File` section now directs users to `docs/asc-api-setup.md` instead of describing setup inline.
+- README: `Security Model` section links to `docs/asc-api-setup.md`.
+
 ## [0.1.0] - 2026-06-03
 
 ### Added

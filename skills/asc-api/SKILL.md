@@ -42,7 +42,9 @@ For mutating live ASC operations (`POST`, `PATCH`, `DELETE`), confirm the target
 
 ## Local Credential File
 
-Expect the user to create this file manually outside the project:
+Expect the user to create this file manually outside the project. If they have not done so yet, direct them to **`docs/asc-api-setup.md`** in the repository root for a complete step-by-step guide covering key generation, `.p8` file storage, and setup verification.
+
+The file location:
 
 ```text
 ~/.asc_secrets

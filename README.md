@@ -118,6 +118,8 @@ ASC Release Kit is intentionally conservative around App Store Connect automatio
 
 The `asc-api` skill includes a safe Python client template and an OpenAPI helper for generating endpoint-aware task JSON.
 
+For a step-by-step guide to generating an API key, creating `~/.asc_secrets`, and verifying your setup, see **[docs/asc-api-setup.md](docs/asc-api-setup.md)**.
+
 ## Screenshot Workflow Requirements
 
 `asc-screenshots` requires all of these before it starts:
