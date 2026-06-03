@@ -242,6 +242,7 @@ Soft dependency resolution:
 - Edit PXD files and export PNG files only through Pixelmator Pro's official AppleScript dictionary.
 - Do not generate final PXD files by mutating PXD zip contents, SQLite metadata, QuickLook previews, thumbnails, or `data/*OriginalContentSource` files directly.
 - If Pixelmator Pro cannot open the copied PXD, stop the PXD/PNG step and report the invalid template.
+- **If a PXD template path was provided, the PXD processing step is mandatory and must be completed before reporting success.** Do not silently skip PXD creation and output only raw screenshots. If Pixelmator Pro cannot be launched, cannot be addressed via AppleScript, or fails to process the template, stop immediately and report the exact failure. Raw Xcode UI test screenshots are an intermediate artifact, not a finished deliverable when a PXD template path is present.
 
 ## Subagent Delegation
 
