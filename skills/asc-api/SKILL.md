@@ -225,6 +225,7 @@ When the user provides multiple Markdown files or multiple sections, convert eac
 4. Execute safely only when appropriate.
    - For `GET`, run the script if the user asked for live data and local network access is available/approved.
    - For `POST`, `PATCH`, or `DELETE`, show the generated standard task JSON first, including method, endpoint, resource id, and body, then stop. Ask for confirmation before running. Do not upload or modify ASC in the same turn that first creates the final JSON unless the user already explicitly approved that exact JSON.
+   - If the caller provided an output path (for example, as a subagent receiving `output path: /some/path/asc-tasks.json`), write the final task JSON to that exact path before stopping for confirmation. Confirm the absolute path in the completion summary so the caller can locate it. If no output path was provided, print the JSON in the current conversation only.
 
 5. Report results.
    - Summarize ASC response data in human-readable form.
