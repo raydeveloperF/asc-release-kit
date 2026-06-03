@@ -218,20 +218,18 @@ At the end of the workflow, the output report must include:
 
 ## Soft Dependencies
 
-Other skills and named subagents are soft dependencies:
+Other skills and subagents are soft dependencies:
 
 - If `$pixelmator-pxd-editor`, `$ui-ux-pro-max`, or `$imagegen` is available locally, use it for its relevant step.
 - If a soft skill is unavailable, skip that skill-specific pass or use the closest safe local substitute, then report at the end that the workflow did not follow the most standard path and name the substitute used.
-- Prefer `@product-manager` and `@content-marketer` for their named roles when available.
-- If a named subagent is unavailable, spawn the closest substitute subagent for that role with the same constraints.
-- Delegation itself is mandatory: do not perform product-manager or content-marketer work in the main conversation. If no subagent mechanism is available at all, stop and report that the workflow is blocked by missing subagent delegation.
+- Two workflow steps require subagent delegation to keep the main conversation context lean: promo point discovery and localized headline writing. Delegate both to subagents using whatever mechanism the current environment provides. Do not perform either task inline in the main conversation.
+- If no subagent mechanism exists at all in the current environment, stop and report that the workflow is blocked.
 
 Soft dependency resolution:
 
 - Treat a skill as available only when it appears in the current skill metadata or was explicitly provided by the user, and its `SKILL.md` can be loaded.
 - Load an available soft skill before the relevant step, then follow the narrower skill when it conflicts with general guidance here.
-- Treat a subagent as available when the current environment exposes a way to spawn an agent by name, role, or close task description.
-- When substituting a named subagent, keep the original prompt constraints and record the substitute role/name for the final report.
+- Treat a subagent as available when the current environment exposes any mechanism for spawning an independent agent — by name, by role description, by tool call, or by any other means.
 - Do not use soft-dependency fallback to bypass any hard dependency.
 
 ## Non-Negotiable PXD Rules
@@ -247,30 +245,51 @@ Soft dependency resolution:
 
 ## Subagent Delegation
 
-This is a multi-agent workflow. When this skill is invoked, treat that as an explicit request to use subagents. The named subagents are preferred soft dependencies, but the work must still be delegated to a subagent if the exact name is unavailable.
+Two steps in this workflow must be delegated to subagents to keep the main conversation context lean. Spawn a capable subagent for each step using whatever mechanism the current environment provides. Do not perform either task inline in the main conversation.
 
-Default delegation:
+- In Claude Code: use the Agent tool, describing the required capability in the prompt.
+- In Codex or similar platforms: use any named agent that matches, or spawn one by role description.
+- Any agent capable of doing the job is acceptable. There is no required agent name.
+- If the environment provides no subagent mechanism at all, stop and report that the workflow is blocked.
 
-- Spawn `@product-manager` after hard dependencies are confirmed and before screenshot planning.
-- If `@product-manager` is unavailable, spawn the closest product strategy or app marketing substitute subagent with the same prompt.
-- Spawn `@content-marketer` after promo points and screenshot inventory exist and before editing PXD headlines.
-- If `@content-marketer` is unavailable, spawn the closest copywriting or localization marketing substitute subagent with the same prompt.
+**Step A — Promo point discovery**
 
-Do not silently perform these roles in the main conversation just because the parent agent can. If no subagent mechanism is available at all, stop and report that subagent delegation is required.
-
-Use concise prompts:
-
-`@product-manager`:
+Run after hard dependencies are confirmed, before screenshot planning. Spawn a subagent capable of product strategy or app marketing analysis with this prompt (substitute actual values):
 
 ```text
-Inspect this app project and identify App Store promotional angles. Return a short table with: promo point, concrete view/screen to screenshot, required UI state or sample data, and why this is worth promoting. Keep claims grounded in the current project. Do not edit files.
+You are helping plan App Store screenshots for an iOS app.
+Project path: <project_root>
+
+Inspect the project read-only and identify the best App Store promotional angles.
+Return a table with these columns:
+- Promo point: the feature or value being showcased
+- Screen to capture: the exact view or state to screenshot
+- Required UI state or sample data: what must be visible before the screenshot
+- Why it's worth promoting: one sentence grounded in the actual project
+
+Identify 3–6 promo points. Keep all claims grounded in what is implemented. Do not edit any files.
 ```
 
-`@content-marketer`:
+**Step B — Localized headline writing**
+
+Run after promo points and screenshots exist, before PXD editing. Spawn a subagent capable of localized marketing copywriting with this prompt (substitute actual values):
 
 ```text
-Using the confirmed promo points, screenshots, and target localizations, write one short localized headline per promo point. Default to one phrase/sentence; English around 5-6 words, other languages similarly compact. Keep claims grounded in the app and screenshot state. Do not edit files unless explicitly asked.
+You are writing App Store screenshot headlines for an iOS app.
+Promo points: <promo_point_table>
+Target locales: <locale_list>
+
+Write one short headline per promo point per locale.
+- Default length: one phrase or sentence, around 5–6 words in English, similarly compact in other languages.
+- Write in the target language natively, not translated English.
+- Keep all claims grounded in the confirmed promo points and visible app state.
+- Do not invent features or make claims unsupported by the screenshots.
+- Do not edit any files.
+
+Return a table grouped by locale: locale | promo point | headline.
 ```
+
+Record which subagent or agent type was used for each step in the final output report.
 
 ## Screenshot Acceptance Criteria
 
@@ -294,7 +313,7 @@ If a screenshot fails acceptance, recapture it before editing PXD files. If it c
    - Create one top-level output folder at the outermost project root, for example `App Store Promo Assets/`.
 
 2. Identify promo points.
-   - Delegate to `@product-manager` when available, or to the closest substitute product/app marketing subagent when it is not.
+   - Delegate to a subagent capable of product strategy or app marketing analysis, following the Step A prompt in `Subagent Delegation`.
    - Require concrete screenshot needs: app view, state, data setup, and claim.
    - Keep claims grounded in implemented product behavior.
 
@@ -312,7 +331,7 @@ If a screenshot fails acceptance, recapture it before editing PXD files. If it c
    - Name screenshots by promo point, such as `01-memory-timeline.png`.
 
 4. Write localized headlines.
-   - Delegate to `@content-marketer` when available, or to the closest substitute copywriting/localization marketing subagent when it is not.
+   - Delegate to a subagent capable of localized marketing copywriting, following the Step B prompt in `Subagent Delegation`.
    - Default to one compact phrase or sentence; English around 5-6 words, other languages similarly short.
    - Do not invent features or claims not visible in the app/project.
 
