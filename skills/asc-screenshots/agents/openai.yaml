@@ -1,0 +1,7 @@
+interface:
+  display_name: "ASC Screenshots"
+  short_description: "Generate localized ASC screenshot assets."
+  default_prompt: "Use $asc-screenshots to create localized ASC screenshots with hard dependency checks, Xcode UI Test screenshot acceptance, PXD editing, export QA, and soft-dependency reporting."
+
+policy:
+  allow_implicit_invocation: true

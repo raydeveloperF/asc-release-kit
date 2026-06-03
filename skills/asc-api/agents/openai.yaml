@@ -1,0 +1,4 @@
+interface:
+  display_name: "ASC API"
+  short_description: "Directly automate App Store Connect from local macOS secrets."
+  default_prompt: "Use $asc-api to inspect or update ASC data safely from local credentials."

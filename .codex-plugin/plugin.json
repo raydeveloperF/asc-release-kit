@@ -1,0 +1,40 @@
+{
+  "name": "asc-release-kit",
+  "version": "0.1.0",
+  "description": "A coordinated App Store Connect launch kit for localized metadata, keywords, screenshots, Pixelmator PXD editing, and safe ASC API task execution.",
+  "author": {
+    "name": "Sun Qingyu",
+    "url": "https://github.com/raydeveloperf"
+  },
+  "repository": "https://github.com/raydeveloperf/asc-release-kit",
+  "homepage": "https://github.com/raydeveloperf/asc-release-kit",
+  "skills": "./skills/",
+  "license": "MIT",
+  "keywords": [
+    "app-store-connect",
+    "asc",
+    "aso",
+    "metadata",
+    "keywords",
+    "screenshots",
+    "ios",
+    "pixelmator",
+    "xcode"
+  ],
+  "interface": {
+    "displayName": "ASC Launch Kit",
+    "shortDescription": "ASC metadata, keywords, screenshots, PXD editing, and API workflows.",
+    "longDescription": "Prepare localized App Store Connect updates from real app projects, including metadata copy, ASO keyword fields, Pixelmator Pro PXD screenshot assets, and explicit-confirmation ASC API task execution.",
+    "developerName": "Sun Qingyu",
+    "category": "Productivity",
+    "capabilities": [
+      "Coordinate localized ASC launch workflows from one input packet",
+      "Draft ASC metadata and keyword fields",
+      "Generate ASC screenshot assets with Xcode UI Tests and Pixelmator Pro",
+      "Edit and export Pixelmator Pro PXD files through official AppleScript",
+      "Prepare safe ASC API task JSON before confirmed execution"
+    ],
+    "brandColor": "#0A84FF",
+    "defaultPrompt": "Use $asc-launch-workflow to prepare a localized App Store Connect launch/update packet."
+  }
+}

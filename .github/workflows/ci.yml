@@ -1,0 +1,40 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  validate:
+    name: Validate plugin and skills
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.13"
+
+      - name: Validate JSON manifests and SKILL.md frontmatter
+        run: python3 scripts/validate.py
+
+      - name: Check Python script syntax
+        run: |
+          python3 -m py_compile skills/asc-api/scripts/asc_client.py
+          python3 -m py_compile skills/asc-api/scripts/inspect_openapi.py
+          echo "Python syntax OK"
+
+      - name: Install Python dependencies
+        run: pip install -r skills/asc-api/scripts/requirements.txt
+
+      - name: Download OpenAPI spec
+        run: bash scripts/download_openapi.sh
+
+      - name: Smoke-test inspect_openapi.py
+        run: |
+          python3 skills/asc-api/scripts/inspect_openapi.py search apps \
+            | python3 -c "import json,sys; d=json.load(sys.stdin); assert len(d) > 0, 'no results'; print(f'OK — {len(d)} endpoint(s) matched')"

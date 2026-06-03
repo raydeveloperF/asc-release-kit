@@ -1,0 +1,7 @@
+interface:
+  display_name: "ASC Metadata"
+  short_description: "Write localized ASC listing copy."
+  default_prompt: "Use $asc-metadata to write localized ASC subtitle, promotional text, and app description for my app."
+
+policy:
+  allow_implicit_invocation: true

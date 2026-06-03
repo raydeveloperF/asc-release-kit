@@ -1,0 +1,24 @@
+{
+  "name": "asc-release-kit",
+  "version": "0.1.0",
+  "description": "A coordinated App Store Connect launch kit for localized metadata, keywords, screenshots, Pixelmator PXD editing, and safe ASC API task execution.",
+  "skills": "./skills/",
+  "author": {
+    "name": "Sun Qingyu",
+    "url": "https://github.com/raydeveloperf"
+  },
+  "repository": "https://github.com/raydeveloperf/asc-release-kit",
+  "homepage": "https://github.com/raydeveloperf/asc-release-kit",
+  "license": "MIT",
+  "keywords": [
+    "app-store-connect",
+    "asc",
+    "aso",
+    "metadata",
+    "keywords",
+    "screenshots",
+    "ios",
+    "pixelmator",
+    "xcode"
+  ]
+}

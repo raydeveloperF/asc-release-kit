@@ -1,0 +1,78 @@
+name: Bug Report
+description: A skill produced wrong output, a script failed, or a manifest caused an install error.
+labels: ["bug"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for filing a bug report. Please fill in as much detail as you can.
+        **Never include ASC credentials, `.p8` contents, JWTs, or Authorization headers.**
+
+  - type: dropdown
+    id: skill
+    attributes:
+      label: Which skill or component?
+      options:
+        - asc-launch-workflow
+        - asc-metadata
+        - asc-keywords
+        - asc-screenshots
+        - asc-api
+        - pixelmator-pxd-editor
+        - scripts/download_openapi.sh
+        - scripts/validate.py
+        - Plugin install / manifest
+        - Other
+    validations:
+      required: true
+
+  - type: dropdown
+    id: tool
+    attributes:
+      label: Which tool are you using?
+      options:
+        - Claude Code
+        - Codex
+        - Both
+    validations:
+      required: true
+
+  - type: input
+    id: os
+    attributes:
+      label: macOS version
+      placeholder: "e.g. macOS 15.4"
+    validations:
+      required: true
+
+  - type: textarea
+    id: steps
+    attributes:
+      label: Steps to reproduce
+      placeholder: |
+        1. Invoked `$asc-launch-workflow` with …
+        2. Provided the following input packet …
+        3. The skill stopped at …
+    validations:
+      required: true
+
+  - type: textarea
+    id: expected
+    attributes:
+      label: Expected behaviour
+    validations:
+      required: true
+
+  - type: textarea
+    id: actual
+    attributes:
+      label: Actual behaviour (output or error)
+      description: Paste the relevant output. Redact any secrets before posting.
+    validations:
+      required: true
+
+  - type: textarea
+    id: context
+    attributes:
+      label: Additional context
+      description: Anything else that might help — e.g. Pixelmator Pro version, Xcode version, Python version.

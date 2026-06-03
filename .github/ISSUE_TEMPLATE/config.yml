@@ -1,0 +1,8 @@
+blank_issues_enabled: false
+contact_links:
+  - name: App Store Connect API Documentation
+    url: https://developer.apple.com/documentation/appstoreconnectapi
+    about: Official Apple reference for all ASC API endpoints and field definitions.
+  - name: Claude Code Documentation
+    url: https://docs.anthropic.com/claude-code
+    about: Claude Code plugin and skill authoring documentation.

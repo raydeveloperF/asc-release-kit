@@ -1,0 +1,32 @@
+{
+  "$schema": "https://anthropic.com/claude-code/marketplace.schema.json",
+  "name": "asc-release-kit",
+  "description": "Agent Skills for localized App Store Connect launch and update workflows, including Pixelmator Pro PXD editing.",
+  "owner": {
+    "name": "Sun Qingyu",
+    "url": "https://github.com/raydeveloperf"
+  },
+  "plugins": [
+    {
+      "name": "asc-release-kit",
+      "description": "Coordinate ASC metadata, keywords, screenshots, Pixelmator PXD editing, and safe ASC API task execution.",
+      "version": "0.1.0",
+      "author": {
+        "name": "Sun Qingyu",
+        "url": "https://github.com/raydeveloperf"
+      },
+      "repository": "https://github.com/raydeveloperf/asc-release-kit",
+      "source": "./",
+      "category": "productivity",
+      "license": "MIT",
+      "keywords": [
+        "app-store-connect",
+        "asc",
+        "aso",
+        "ios",
+        "screenshots",
+        "pixelmator"
+      ]
+    }
+  ]
+}

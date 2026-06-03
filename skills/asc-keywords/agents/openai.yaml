@@ -1,0 +1,7 @@
+interface:
+  display_name: "ASC Keywords"
+  short_description: "Generate localized 100-character ASC keyword fields."
+  default_prompt: "Use $asc-keywords to create localized ASC keyword fields for my app."
+
+policy:
+  allow_implicit_invocation: true

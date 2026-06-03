@@ -1,0 +1,22 @@
+.DS_Store
+*.log
+__pycache__/
+.pytest_cache/
+.venv/
+.env
+.env.*
+!.env.example
+
+# Never commit local App Store Connect credentials or private keys.
+.asc_secrets
+*.p8
+AuthKey_*.p8
+
+# App Store Connect OpenAPI spec — too large to commit (~6 MB).
+# Run `bash scripts/download_openapi.sh` after cloning to fetch it.
+skills/asc-api/references/openapi.oas.json
+
+# Generated launch outputs.
+ASC Launch Assets*/
+App Store Launch Assets*/
+

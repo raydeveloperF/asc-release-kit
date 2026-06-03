@@ -1,0 +1,7 @@
+interface:
+  display_name: "ASC Launch Workflow"
+  short_description: "Coordinate ASC metadata, keywords, screenshots, and API tasks."
+  default_prompt: "Use $asc-launch-workflow to run a coordinated localized ASC launch workflow from one input packet."
+
+policy:
+  allow_implicit_invocation: true

@@ -1,0 +1,56 @@
+name: Feature Request
+description: Suggest an improvement to an existing skill, script, or workflow.
+labels: ["enhancement"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Before opening a feature request, please check the existing issues to see if it has already been suggested.
+        For changes that significantly alter an existing skill, please open an issue to discuss scope before sending a PR.
+
+  - type: dropdown
+    id: area
+    attributes:
+      label: Which skill or area does this affect?
+      options:
+        - asc-launch-workflow
+        - asc-metadata
+        - asc-keywords
+        - asc-screenshots
+        - asc-api
+        - pixelmator-pxd-editor
+        - scripts (download_openapi / validate)
+        - CI / GitHub Actions
+        - Documentation
+        - New skill
+        - Other
+    validations:
+      required: true
+
+  - type: textarea
+    id: problem
+    attributes:
+      label: What problem does this solve?
+      description: Describe the current limitation or pain point.
+    validations:
+      required: true
+
+  - type: textarea
+    id: solution
+    attributes:
+      label: Proposed solution
+      description: Describe what you'd like to see added or changed.
+    validations:
+      required: true
+
+  - type: textarea
+    id: alternatives
+    attributes:
+      label: Alternatives considered
+      description: Any other approaches you thought of and why you ruled them out.
+
+  - type: textarea
+    id: context
+    attributes:
+      label: Additional context
+      description: Screenshots, links to Apple docs, or other references that support this request.

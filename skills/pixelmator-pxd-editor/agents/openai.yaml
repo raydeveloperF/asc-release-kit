@@ -1,0 +1,4 @@
+interface:
+  display_name: "Pixelmator PXD Editor"
+  short_description: "Edit PXD files via AppleScript only"
+  default_prompt: "Use $pixelmator-pxd-editor to edit this Pixelmator Pro PXD file through the official AppleScript interface."
