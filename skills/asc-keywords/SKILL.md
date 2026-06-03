@@ -110,4 +110,4 @@ A good final answer:
 - Explains tradeoffs briefly.
 - Uses locale-native search language.
 - Avoids title/subtitle recommendations unless the user separately asks for them.
-- Exports the final result as one Markdown document grouped by language.
+- Writes the final Markdown output, grouped by language, to a file: use the output path provided by the caller if one was given, otherwise write to `asc-keywords.md` in the current working directory. Confirm the absolute path in the completion summary.

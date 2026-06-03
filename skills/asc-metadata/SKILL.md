@@ -139,4 +139,9 @@ A good result:
 - Is grounded in the real project rather than a generic app category.
 - Is ready to paste into App Store Connect after human locale review.
 
-Finally, export the final result as one Markdown document, grouped by language.
+Finally, write the complete Markdown output, grouped by language, to a file:
+
+- If the caller provided an output path (for example, as a subagent receiving `output path: /some/path/asc-metadata.md`), write to that exact path.
+- If no output path was provided, write to `asc-metadata.md` in the current working directory.
+
+After writing, confirm the absolute path of the written file in your completion summary so the caller can locate it.
