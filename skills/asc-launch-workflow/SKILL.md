@@ -115,7 +115,7 @@ Minimum required inputs for the full workflow:
 - Project root or enough app evidence to understand the product.
 - Target localization list.
 - Writing style. If missing, ask; default option is `平静内敛`, but the user must choose it or provide another style.
-- App category and core user job.
+- App category and core user job. Infer both from the project first (README, product docs, existing App Store metadata, app entry point, feature screens). Only ask the user if the project provides insufficient evidence to determine them.
 - Keyword seed words or enough user-approved starter context per locale.
 - Pixelmator Pro PXD template path and UI test workflow details if `screenshots` is requested.
 - ASC app identity or enough local/project evidence for read-only ASC discovery if `asc-json` or `asc-execute` is requested.
