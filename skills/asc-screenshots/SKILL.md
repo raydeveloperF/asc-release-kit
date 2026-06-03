@@ -115,7 +115,7 @@ final class ScreenshotTests: XCTestCase {
 }
 ```
 
-Adapt the test body for each promo point identified by `@product-manager`. Replace the example navigation steps with real element queries derived from the inspected app. Use `waitForExistence(timeout:)` instead of `sleep` for all waits.
+Adapt the test body for each promo point identified in the promo plan. Replace the example navigation steps with real element queries derived from the inspected app. Use `waitForExistence(timeout:)` instead of `sleep` for all waits.
 
 Do not invent UI element labels. Derive them from the inspected source: `accessibilityIdentifier`, `accessibilityLabel`, button titles, navigation bar titles, or visible text strings from the app's localization files.
 

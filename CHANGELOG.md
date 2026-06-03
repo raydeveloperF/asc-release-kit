@@ -18,9 +18,6 @@ This project uses [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 - `asc-screenshots`: Xcode UI Tests are no longer a hard blocker. Missing tests trigger code generation instead of stopping the workflow. The other four hard dependencies (Pixelmator Pro, AppleScript, PXD template, localization list) remain strict hard stops.
 - `asc-screenshots`: subagent delegation decoupled from named agents (`@product-manager`, `@content-marketer`). Any capable subagent is accepted; the platform decides how to spawn it.
 - `asc-launch-workflow`: all child skill phases (`$asc-metadata`, `$asc-keywords`, `$asc-screenshots`, `$asc-api`) now run as subagents instead of inline in the main conversation. The coordinator builds the shared product brief in the main conversation, dispatches subagents with file-based inputs, and handles ASC mutation confirmation directly with the user. `asc-product-brief.md` added to output layout as the shared foundation file.
-
-### Changed
-
 - `asc-api` SKILL.md: `Local Credential File` section now directs users to `docs/asc-api-setup.md` instead of describing setup inline.
 - README: `Security Model` section links to `docs/asc-api-setup.md`.
 
