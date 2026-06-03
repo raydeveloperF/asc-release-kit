@@ -310,7 +310,7 @@ If a screenshot fails acceptance, recapture it before editing PXD files. If it c
    - Verify the five hard dependencies first; stop and list missing items if any are unavailable.
    - Resolve the iOS project root and the provided PXD path.
    - Normalize localization folder names, such as `en：英语` or `zh-Hans：简体中文`, following the user's naming style when provided.
-   - Create one top-level output folder at the outermost project root, for example `App Store Promo Assets/`.
+   - Determine the top-level output folder: if the caller provided an output folder path, use that exactly. Otherwise create `App Store Promo Assets/` at the outermost project root.
 
 2. Identify promo points.
    - Delegate to a subagent capable of product strategy or app marketing analysis, following the Step A prompt in `Subagent Delegation`.
@@ -325,9 +325,9 @@ If a screenshot fails acceptance, recapture it before editing PXD files. If it c
    - Run tests with the generated test plan to cover all locales in one pass.
    - Export or extract UI test screenshots from the result bundle into the language screenshot folders.
    - Apply the screenshot acceptance criteria before moving to PXD creation.
-   - Save screenshots under one folder per language:
-     - `App Store Promo Assets/en：英语/screenshots/`
-     - `App Store Promo Assets/zh-Hans：简体中文/screenshots/`
+   - Save screenshots under one folder per language inside the top-level output folder:
+     - `<output-folder>/en：英语/screenshots/`
+     - `<output-folder>/zh-Hans：简体中文/screenshots/`
    - Name screenshots by promo point, such as `01-memory-timeline.png`.
 
 4. Write localized headlines.
