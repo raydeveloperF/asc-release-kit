@@ -182,23 +182,44 @@ Before executing any `POST`, `PATCH`, or `DELETE`, output the generated standard
 
 Generated task JSON shape:
 
+The output is always a JSON **array**. Each locale and each independent resource produces one item. Never collapse multiple locales into a single object or produce a content summary.
+
 ```json
-{
-  "method": "PATCH",
-  "path": "/v1/appStoreVersionLocalizations/123456789",
-  "body": {
-    "data": {
-      "type": "appStoreVersionLocalizations",
-      "id": "123456789",
-      "attributes": {
-        "promotionalText": "更安静地记录每一天。",
-        "keywords": "日记,情绪,照片,记录,生活",
-        "whatsNew": "- 优化了记录体验\n- 修复了一些细节问题"
+[
+  {
+    "method": "PATCH",
+    "path": "/v1/appStoreVersionLocalizations/{real-id-from-discovery}",
+    "body": {
+      "data": {
+        "type": "appStoreVersionLocalizations",
+        "id": "{real-id-from-discovery}",
+        "attributes": {
+          "promotionalText": "更安静地记录每一天。",
+          "keywords": "日记,情绪,照片,记录,生活",
+          "whatsNew": "- 优化了记录体验\n- 修复了一些细节问题"
+        }
+      }
+    }
+  },
+  {
+    "method": "PATCH",
+    "path": "/v1/appStoreVersionLocalizations/{real-id-from-discovery}",
+    "body": {
+      "data": {
+        "type": "appStoreVersionLocalizations",
+        "id": "{real-id-from-discovery}",
+        "attributes": {
+          "promotionalText": "Quietly capture every day.",
+          "keywords": "journal,mood,photo,log,life",
+          "whatsNew": "- Improved recording experience\n- Fixed minor issues"
+        }
       }
     }
   }
-}
+]
 ```
+
+IDs in the `path` and `data.id` fields must come from real ASC API discovery. Never invent or reuse placeholder IDs. A content summary object such as `{"app": {...}, "locales": [...]}` is not a valid task JSON output and must never be generated.
 
 When the user provides multiple Markdown files or multiple sections, convert each independent target resource into one task JSON item. Summarize all tasks and ask for one confirmation before execution.
 
