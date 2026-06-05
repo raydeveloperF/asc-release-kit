@@ -31,96 +31,41 @@ Read-only ASC discovery may run when the task is clear and local access is avail
 
 ## Start Gate
 
-Before starting any project inspection, subagent dispatch, hard dependency check, file generation, screenshot capture, App Store Connect discovery, or API task drafting, verify that all required inputs for the requested phases are present.
+Before starting any project inspection, subagent dispatch, hard dependency check, file generation, screenshot capture, App Store Connect discovery, or API task drafting, verify that the required inputs below are present.
 
-If any required input is missing, do not begin the workflow. Return a concise missing-information checklist and ask the user to provide the missing values. Repeat this gate on the next user response. Continue asking and do not start until every required value for the requested phases is available.
+Everything not listed here is either inferred from the project, defaulted automatically, or discovered at runtime. Do not ask the user for anything beyond this list.
 
-Do not partially execute available phases while waiting for missing required inputs for other requested phases. If the user requested `metadata`, `keywords`, `screenshots`, and `asc-json`, the whole coordinated workflow waits until the required inputs for all four requested phases are complete. Only reduce the required input set when the user explicitly removes phases from scope.
+**Required inputs — the only things to block on:**
 
-When blocking on missing inputs, use this format:
+| Input | Required when | Why it cannot be inferred |
+|---|---|---|
+| Phases to run | Always | User decision; cannot be guessed |
+| Target locales | Always | User decision; cannot be guessed |
+| Pixelmator Pro PXD template path | `screenshots` phase | Stored in user's personal directory; not discoverable |
+| Intended ASC operation (`draft-only` / `generate-task-json` / `execute-after-confirmation`) | `asc-json` or `asc-execute` phase | Determines whether live App Store mutations happen; must be explicit |
+
+**Everything else is automatic — never ask for these upfront:**
+
+- Project root → use current working directory
+- App name, Bundle ID, Platform, Version → read from Xcode project files
+- App category and core user job → infer from README, product docs, existing metadata, feature screens
+- Writing style → default to `平静内敛`; note it in the run sheet; user can override any time
+- Output root → auto-generate as `<AppName> ASC Launch Assets YYYY-MM-DD/` in the project root
+- Screenshot output folder, device model, UI test target/scheme → discover from the project
+- Keyword seed words → infer from app name, feature names, existing metadata; generate a starter set if insufficient
+- ASC app identity and resource IDs → discover via read-only ASC API using bundle ID found in project
+- Resource scope and fields to update → derive from the requested phases
+
+If a required input is missing, return only a short checklist and wait:
 
 ```markdown
-Missing required launch inputs:
+Missing required inputs:
 - [field]: why it is required
 
-Please provide these values before I start the workflow.
+Please provide these values to start.
 ```
 
-## One-Shot Input Packet
-
-When the user wants to provide everything at once, ask for or accept a packet with these sections. Do not require perfect formatting; normalize it into this structure before starting.
-
-```markdown
-# ASC Launch Packet
-
-## Project
-- Project root:
-- App name:
-- Bundle ID:
-- Platform:
-- Category:
-- Version string:
-- Existing title:
-- Existing subtitle:
-- Current App Store metadata files:
-- Existing screenshot or marketing folders:
-
-## Localizations
-- Locales:
-- Folder naming style:
-- Locale-specific notes:
-
-## Brand And Copy
-- Writing style:
-- Target audience:
-- Core user job:
-- 3-5 strongest implemented features:
-- Emotional promise:
-- Forbidden claims or wording:
-
-## Keywords
-- Seed function words per locale:
-- Existing title/subtitle words to avoid:
-- Competitors per locale:
-- App Store autocomplete evidence:
-- Trademark/legal-risk preferences:
-
-## Screenshots
-- Pixelmator Pro PXD template path:
-- Output folder:
-- Screenshot device model:
-- Screenshot device family and dimensions:
-- UI test target/scheme/test plan:
-- Desired screenshot page count:
-- Required views/states/sample data:
-- Existing screenshots, if any:
-
-## App Store Connect
-- Intended operation: draft-only | generate-task-json | execute-after-confirmation
-- App Store Connect app id, if known:
-- ASC resource ids, if known:
-- Resource scope: app info | app store version localization | screenshots | mixed
-- Target version state, if relevant:
-- Fields to update:
-
-## Run Controls
-- Phases to run: metadata | keywords | screenshots | asc-json | asc-execute
-- Stop after each phase: yes/no
-- Save final documents to:
-- Human review notes:
-```
-
-Minimum required inputs for the full workflow:
-
-- Project root or enough app evidence to understand the product.
-- Target localization list.
-- Writing style. If missing, ask; default option is `平静内敛`, but the user must choose it or provide another style.
-- App category and core user job. Infer both from the project first (README, product docs, existing App Store metadata, app entry point, feature screens). Only ask the user if the project provides insufficient evidence to determine them.
-- Keyword seed words per locale. Infer from the project first (app name, feature names, existing metadata, localization files). If the project provides insufficient evidence, generate a starter set and label it as needing App Store manual validation. Only ask the user if they want to provide custom seeds or override the inferred set.
-- Pixelmator Pro PXD template path and UI test workflow details if `screenshots` is requested.
-- ASC app identity or enough local/project evidence for read-only ASC discovery if `asc-json` or `asc-execute` is requested.
-
-Ask only for missing information required by the requested phases. If any required item is missing, stop before all workflow work and request the missing values. Do not inspect the project, run dependency checks, draft copy, generate keyword starters, create folders, or query App Store Connect until the start gate passes.
+Do not begin any workflow work — no project inspection, subagent dispatch, dependency checks, file generation, or ASC queries — until all required inputs for the requested phases are present.
 
 ## Subagent Dispatch Model
 
