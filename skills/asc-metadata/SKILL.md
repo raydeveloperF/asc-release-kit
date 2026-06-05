@@ -15,16 +15,11 @@ Do not generate keywords, screenshot headlines, release notes, privacy copy, or 
 
 ## Required Inputs
 
-Before writing final copy, check whether the user already provided both:
+The only input that cannot be inferred: **target locales** (e.g. `en-US`, `zh-Hans`).
 
-- Target localization languages/locales, such as `zh-Hans`, `en-US`, `ja`, or `de-DE`.
-- Writing style.
+If target locales are missing and were not provided by the caller, ask once and stop.
 
-If target languages are missing, stop and ask the user to provide them. Do not guess languages from the project.
-
-If writing style is missing, stop and ask the user to provide it. Tell the user that the default style is `平静内敛`; if they choose the default, write in that style.
-
-Ask only for the missing item or items. Keep the question short.
+Writing style defaults to `平静内敛` when not specified. Do not ask for it.
 
 ## Project Context First
 
@@ -74,10 +69,7 @@ When the user chooses the default style, use calm, restrained product language:
 
 ## Drafting Workflow
 
-1. Confirm required inputs.
-   - If localization languages or writing style are missing, ask and stop.
-
-2. Understand the project.
+1. Understand the project.
    - Inspect project evidence first when available.
    - Summarize the working brief in 3-6 bullets before final copy.
 

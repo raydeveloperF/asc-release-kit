@@ -176,6 +176,8 @@ Before writing any file to the project, show the user:
 
 Ask for confirmation. If the user requests changes to the navigation steps, update the generated code. Do not write to the project until the user approves.
 
+**After the user approves, immediately write the files and proceed to step 6 (run the tests). Do not stop or summarize after writing. Approval is authorization to execute the full remaining pipeline: write → build → run → extract → PXD → PNG.**
+
 ### 6. Run the tests and extract screenshots
 
 After the user approves and the files are written, run the tests using XcodeBuildMCP when available, or via `xcodebuild` directly:
@@ -218,19 +220,9 @@ At the end of the workflow, the output report must include:
 
 ## Soft Dependencies
 
-Other skills and subagents are soft dependencies:
+`$pixelmator-pxd-editor` is a soft dependency for PXD editing. Use it when available; otherwise follow the AppleScript rules in this skill directly and note the fallback in the output report.
 
-- If `$pixelmator-pxd-editor`, `$ui-ux-pro-max`, or `$imagegen` is available locally, use it for its relevant step.
-- If a soft skill is unavailable, skip that skill-specific pass or use the closest safe local substitute, then report at the end that the workflow did not follow the most standard path and name the substitute used.
-- Two workflow steps prefer subagent delegation: promo point discovery and localized headline writing. Delegate both to subagents using whatever mechanism the current environment provides.
-- If no subagent mechanism exists, perform both steps inline within the current context and note this in the final report. This is acceptable when this skill is already running as a subagent, because the main conversation context is already protected.
-
-Soft dependency resolution:
-
-- Treat a skill as available only when it appears in the current skill metadata or was explicitly provided by the user, and its `SKILL.md` can be loaded.
-- Load an available soft skill before the relevant step, then follow the narrower skill when it conflicts with general guidance here.
-- Treat a subagent as available when the current environment exposes any mechanism for spawning an independent agent — by name, by role description, by tool call, or by any other means.
-- Do not use soft-dependency fallback to bypass any hard dependency.
+`$ui-ux-pro-max` and `$imagegen` are not part of this toolkit. Do not reference or wait for them.
 
 ## Non-Negotiable PXD Rules
 
@@ -246,12 +238,7 @@ Soft dependency resolution:
 
 ## Subagent Delegation
 
-Two steps in this workflow prefer subagent delegation: promo point discovery and headline writing. Spawn a capable subagent for each step using whatever mechanism the current environment provides.
-
-- In Claude Code: use the Agent tool, describing the required capability in the prompt.
-- In Codex or similar platforms: use any named agent that matches, or spawn one by role description.
-- Any agent capable of doing the job is acceptable. There is no required agent name.
-- If no subagent mechanism is available, perform both steps inline within the current context. Note the fallback in the final report. This is acceptable when this skill is already running as a subagent spawned by `$asc-launch-workflow`, because the main conversation context is already protected at the coordinator level.
+Two workflow steps must be delegated to subagents: promo point discovery (Step A) and headline writing (Step B). Use whatever subagent mechanism the environment provides. If none exists, perform both inline and note it in the output report.
 
 **Step A — Promo point discovery**
 
@@ -320,9 +307,9 @@ If a screenshot fails acceptance, recapture it before editing PXD files. If it c
 
 3. Capture localized screenshots.
    - Check whether a screenshot-capable UI test target already exists in the project.
-   - If it does not exist, follow `Writing UI Tests When Missing` in full before continuing: inspect the project, generate `ScreenshotTests.swift` and a test plan, show the code to the user, wait for approval, write the files, then proceed.
-   - If it already exists, verify it can produce the promo-point screenshots the plan requires. Add missing test functions if needed, following the same show-and-confirm rule before writing.
-   - Use XcodeBuildMCP tooling when available to build, run, and capture through the UI test workflow; otherwise run the tests via `xcodebuild` and report the substitute path at the end.
+   - If it does not exist, follow `Writing UI Tests When Missing` in full before continuing: inspect the project, generate `ScreenshotTests.swift` and a test plan, show the code to the user, wait for approval, write the files, **then immediately run the tests**. Do not stop after writing.
+   - If it already exists, verify it can produce the promo-point screenshots the plan requires. Add missing test functions if needed, following the same show-and-confirm rule before writing, then immediately run.
+   - Use XcodeBuildMCP tooling when available to build, run, and capture; otherwise use `xcodebuild` directly.
    - Run tests with the generated test plan to cover all locales in one pass.
    - Export or extract UI test screenshots from the result bundle into the language screenshot folders.
    - Apply the screenshot acceptance criteria before moving to PXD creation.
@@ -347,22 +334,10 @@ If a screenshot fails acceptance, recapture it before editing PXD files. If it c
    - If the template has a headline/text placeholder, replace only that text and preserve its position, size, style, and layout.
    - If no headline placeholder exists, place short headline text where it fits without covering the device or important UI.
 
-6. Decide on decoration.
-   - Use `$ui-ux-pro-max` as a design review pass before adding decoration when it is available.
-   - Skip decoration when the template already looks balanced.
-   - If `$ui-ux-pro-max` is unavailable, make a minimal local visual judgment and report the fallback at the end.
-   - If decoration helps and `$imagegen` is available, use `$imagegen` for subtle background assets that match the app design language.
-   - If decoration helps but `$imagegen` is unavailable, skip generated decoration or use existing project/template assets only, then report the fallback at the end.
-   - Keep decoration quiet: modest saturation, simple shapes, no busy detail, never competing with the app UI or headline.
-   - Place background assets behind the iPhone/mockup and text.
-
-7. Final QA and export.
-   - Use `$ui-ux-pro-max` for final visual review of PXD previews/exports when it is available.
-   - If `$ui-ux-pro-max` is unavailable, perform a basic local QA pass and report the fallback at the end.
-   - Check headline fit, screenshot fit, language folder organization, contrast, hierarchy, and the export QA checklist.
+6. Final QA and export.
+   - Check headline fit, screenshot fit, language folder organization, contrast, and hierarchy against the export QA checklist.
    - Export PNG files next to their PXD files in the same language folder.
    - Report generated folders and any screenshots/PXD files that could not be produced.
-   - Report any unavailable soft dependencies, substitute subagents, skipped soft-skill steps, and whether the result followed the most standard path.
 
 Export QA checklist:
 

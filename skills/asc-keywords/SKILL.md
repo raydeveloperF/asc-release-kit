@@ -26,38 +26,20 @@ If the project context is missing or too thin, ask focused questions or request 
 
 ## Required Inputs
 
-Ask for missing essentials before producing final keyword strings:
+The only input that cannot be inferred: **target locales** (e.g. `en-US`, `zh-Hans`).
 
-- Target localization languages/locales, such as `en-US`, `zh-Hans`, `ja`, or `de-DE`.
-- App category and core user job.
-- 3-8 seed function words per locale, preferably in the target language.
+If target locales are missing and were not provided by the caller, ask once and stop.
 
-Useful optional inputs:
+Everything else — app category, core user job, seed words — infer from the product brief or project files. Do not ask the user for these.
 
-- App name and existing title/subtitle, only to avoid duplicate words in the keyword field.
-- Top competitors per locale.
-- Manual App Store autocomplete phrases, competitor titles/subtitles, and user review/pain-point phrases.
-- Whether the app is new/indie or already has strong ranking/install volume.
+## Candidate Generation
 
-If the user only gives languages and a rough app idea, create a starter set and clearly label it as "needs App Store manual validation".
+Build candidates from the product brief and project evidence:
 
-## Source Capture Workflow
-
-Prefer user-provided App Store evidence over generic web guesses.
-
-1. Collect official-intent candidates.
-   - Ask the user to type core function words into the App Store search box on iPhone for each locale and paste the autocomplete suggestions.
-   - Treat autocomplete phrases as high-signal because they reflect real App Store search intent.
-
-2. Extract competitor vocabulary.
-   - Ask for the top 3 direct competitors per locale.
-   - Pull industry/function words from competitor app names and visible metadata if available.
-   - Keep generic industry words; do not copy trademarked brand names unless the user explicitly wants a legal-risk review.
-
-3. Add user-language candidates.
-   - Include synonyms for core functions in the target language.
-   - Include short pain-point words from real reviews, support tickets, or user interviews.
-   - Prefer words users search for, not internal product terminology.
+1. Extract core function words and feature names from the product brief.
+2. Add locale-native synonyms for those functions and common user search intent words.
+3. Pull any competitor vocabulary the user or brief already mentions.
+4. Label the result as "starter set — validate with on-device App Store search before shipping" when no live autocomplete evidence is available.
 
 ## Saturation Screening
 
