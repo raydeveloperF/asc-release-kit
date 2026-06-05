@@ -160,7 +160,22 @@ Then query ASC read-only to resolve real resource ids. Common discovery chain:
 2. `GET /v1/apps/{appId}/appStoreVersions` filtered by platform, version string, state, or latest suitable version.
 3. `GET /v1/appStoreVersions/{versionId}/appStoreVersionLocalizations` to find localization ids by locale.
 4. `GET /v1/apps/{appId}/appInfos` and related `appInfoLocalizations` when fields belong to app info metadata.
-5. Screenshot uploads: locate or create the correct `appScreenshotSets` using version localization, screenshot display type, locale, and platform evidence before creating `appScreenshots`.
+5. Screenshot uploads: locate or create the correct `appScreenshotSets` using version localization, screenshot display type, locale, and platform evidence before creating `appScreenshots`. Determine `screenshotDisplayType` from the actual PNG pixel dimensions — do not guess from device name alone:
+
+   | Dimensions (portrait) | `screenshotDisplayType` | Common devices |
+   |---|---|---|
+   | 1320×2868 | `APP_IPHONE_69` | iPhone 16 Pro Max |
+   | 1206×2622 | `APP_IPHONE_67` | iPhone 16 Pro |
+   | 1290×2796 | `APP_IPHONE_67` | iPhone 15 Pro Max, 15 Plus |
+   | 1284×2778 | `APP_IPHONE_65` | iPhone 12–14 Pro Max |
+   | 1242×2688 | `APP_IPHONE_65` | iPhone XS Max |
+   | 1179×2556 | `APP_IPHONE_61` | iPhone 15 |
+   | 1170×2532 | `APP_IPHONE_61` | iPhone 12–14 |
+   | 1125×2436 | `APP_IPHONE_58` | iPhone X, XS |
+   | 1080×1920 | `APP_IPHONE_55` | iPhone 6s–8 Plus |
+   | 750×1334  | `APP_IPHONE_47` | iPhone 6s–8 |
+
+   If the PNG dimensions do not match any row above, check Apple's current screenshot specifications before assigning a display type. Never assume a display type from a device marketing name such as "iPhone 17 Pro" without verifying the actual exported pixel dimensions.
 
 After discovery, summarize the matched target before generating mutating JSON:
 

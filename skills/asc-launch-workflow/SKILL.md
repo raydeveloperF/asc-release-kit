@@ -199,6 +199,8 @@ Expect back:
 - paths to generated `.pxd` and `.png` files;
 - dependency check result, screenshot acceptance result, export QA result.
 
+**Waiting for the screenshots subagent:** The screenshot pipeline (UI test run + Pixelmator Pro PXD export) takes significantly longer than the metadata and keywords phases. If the subagent has not returned after an extended period, send it one status check before drawing any conclusions. Only after the second non-response or an explicit failure report should the coordinator treat the phase as blocked.
+
 **After receiving the subagent's response, the coordinator must verify that `.pxd` file paths are present before proceeding.** If the response contains no `.pxd` paths, do not advance to Step 6. Instead, reject the result and ask the subagent to either complete the PXD processing step or report the exact reason it could not be done. Only accept a response with no `.pxd` files if the subagent explicitly reports a hard blocker that prevented Pixelmator Pro from running — in that case, surface the blocker to the user and ask whether to continue without the PXD step.
 
 Do not let metadata copy automatically become screenshot headlines. Promotional headlines are owned by `$asc-screenshots` and must be grounded in actual screenshots.
@@ -283,6 +285,13 @@ Expect back:
 - any redacted error bodies for failures.
 
 Never print secrets, tokens, Authorization headers, or request headers.
+
+**After execution, the coordinator must run a read-only verification pass.** Query ASC to confirm that the live values match what was submitted:
+
+- For metadata tasks: re-fetch the relevant `appInfoLocalizations` and `appStoreVersionLocalizations` and compare each submitted field against the live value.
+- For screenshot tasks: re-fetch the `appScreenshotSets` and confirm each uploaded screenshot has `COMPLETE` state, not `FAILED` or `AWAITING_UPLOAD`.
+
+If any field mismatches or screenshot failures are found, report them explicitly. Do not declare the workflow complete until the verification pass confirms all submitted values are live and correct.
 
 ## Output Layout
 
